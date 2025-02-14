@@ -51,12 +51,21 @@ export default class User {
     })
     image: string
 
-    @Column('simple-array')
+    @Column({
+      type: 'simple-array',
+      nullable: true
+    })
     likes: string[]
 
-    @Column('simple-array')
+    @Column({
+      type: 'simple-array',
+      nullable: true
+    })
     dislikes: string[]
 
-    @Column('simple-array')
+    @Column({
+      type: 'simple-array',
+      nullable: true
+    })
     matches: string[]
 }
