@@ -25,7 +25,7 @@ export default class User {
     @Column({
       type: 'smallint',
     })
-    age: string
+    age: number
 
     @Column({
       type: 'enum',
