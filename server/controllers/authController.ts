@@ -3,9 +3,10 @@ import bcrypt from "bcryptjs";
 import User from "../entities/user";
 import { standardResponse } from "../utils/constats";
 import userService from "../services/userService";
-import { signToken } from "../utils/token";
+import setCookies from "../utils/setCookies";
 
 export class AuthController {
+  // SIGNUP
   static async signup(req:Request<User>, res:Response){
     try {
       const { name, email, age, password, gender, genderPreference } = req.body;
@@ -17,21 +18,14 @@ export class AuthController {
         return res.status(400).json(standardResponse(false, 'User with this email already exists'));
       }
       if(age < 18) { 
-        return res.status(500).json(standardResponse(false, 'You must at lest 18 years old'));
+        return res.status(400).json(standardResponse(false, 'You must at lest 18 years old'));
       }
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
       const user = await userService.createUser({
         name, email, age, password: hashedPassword, gender, genderPreference
       });
-
-      const token = signToken(user.id);
-      res.cookie('jwt', token, {
-        maxAge: 24 * 60 * 60 * 1000,
-        httpOnly: true,
-        sameSite: 'strict',
-        secure: process.env.NODE_ENV == "production"
-      });
+      setCookies({id: user.id}, res);
       return res.status(201).json({
         success: true,
         user
@@ -44,12 +38,34 @@ export class AuthController {
       }
     }
   }
-  static async login(req:Request, res:Response){
+  // LOGIN
+  static async login(req:Request<User>, res:Response){
     try {
-      
+      const { email, password } = req.body;
+      const user = await userService.findUser(email);
+      if(user){
+        const isPasswordCorrect = await bcrypt.compare(password, user.password);
+        if(!isPasswordCorrect) {
+          return res.status(400).json(standardResponse(false, 'Wrong credentials'));
+        };
+        setCookies({id: user.id}, res);
+        return res.status(200).json({
+          success: true,
+          user
+        });
+      };
+      return res.status(400).json(standardResponse(false, 'Wrong credentials'));
     } catch (error) {
-      
+      if(error instanceof Error) {
+        return res.status(500).json(standardResponse(false, error.message))
+      } else {
+        return res.status(500).json(standardResponse(false, 'Server error'))
+      }
     }
   }
-  static async logout(req:Request, res:Response){}
+  // LOGOUT
+  static async logout(req:Request, res:Response){
+    res.clearCookie('jwt');
+    return res.status(200).json(standardResponse(true, 'logged out successfully'));
+  }
 }
