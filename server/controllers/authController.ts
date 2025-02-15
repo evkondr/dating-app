@@ -10,7 +10,11 @@ export class AuthController {
     try {
       const { name, email, age, password, gender, genderPreference } = req.body;
       if(!name || !email || !age || !gender || !password || !genderPreference) {
-        return res.status(500).json(standardResponse(false, 'All fields are required'));
+        return res.status(400).json(standardResponse(false, 'All fields are required'));
+      }
+      const isAlreadyExists = await userService.findUser(email);
+      if(isAlreadyExists) {
+        return res.status(400).json(standardResponse(false, 'User with this email already exists'));
       }
       if(age < 18) { 
         return res.status(500).json(standardResponse(false, 'You must at lest 18 years old'));
@@ -28,18 +32,24 @@ export class AuthController {
         sameSite: 'strict',
         secure: process.env.NODE_ENV == "production"
       });
-      res.status(201).json({
+      return res.status(201).json({
         success: true,
         user
       })
     } catch(error){
       if(error instanceof Error) {
-        res.status(500).json(standardResponse(false, error.message))
+        return res.status(500).json(standardResponse(false, error.message))
       } else {
-        res.status(500).json(standardResponse(false, 'Server error'))
+        return res.status(500).json(standardResponse(false, 'Server error'))
       }
     }
   }
-  static async login(req:Request, res:Response){}
+  static async login(req:Request, res:Response){
+    try {
+      
+    } catch (error) {
+      
+    }
+  }
   static async logout(req:Request, res:Response){}
 }

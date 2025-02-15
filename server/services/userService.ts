@@ -13,6 +13,10 @@ class UserService {
     const result = await this.repository.save(user);
     return result;
   }
+  async findUser(email:string) {
+    const result = await this.repository.findOneBy({email});
+    return result;
+  }
 };
 
 export default new UserService();
