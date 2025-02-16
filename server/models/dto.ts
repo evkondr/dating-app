@@ -8,3 +8,7 @@ export class UserDto {
   gender: Gender
   genderPreference: Gender
 }
+export class UpdateUserDto extends UserDto {
+  image: string
+  bio: string
+}

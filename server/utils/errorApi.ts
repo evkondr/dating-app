@@ -11,4 +11,7 @@ export default class ErrorApi extends Error {
   static BadRequest(message:string) {
     return new ErrorApi(400, message);
   }
+  static NotFound(message:string) {
+    return new ErrorApi(404, message);
+  }
 }

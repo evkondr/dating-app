@@ -5,6 +5,6 @@ import uploadMiddleware from '../middleware/uploadeMiddleware';
 
 const router = express.Router();
 
-router.post('/update', [protectedRoute, uploadMiddleware.single('file')], UserController.updateProfile);
+router.put('/update/:userId', [protectedRoute, uploadMiddleware.single('file')], UserController.updateProfile);
 
 export default router;
