@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import User from "../entities/user";
-import { standardResponse } from "../utils/constats";
+import { standardResponse } from "../utils/constants";
 import userService from "../services/userService";
 import setCookies from "../utils/setCookies";
 
@@ -42,7 +42,7 @@ export class AuthController {
   static async login(req:Request<User>, res:Response){
     try {
       const { email, password } = req.body;
-      const user = await userService.findUser(email);
+      const user = await userService.findUser({email});
       if(user){
         const isPasswordCorrect = await bcrypt.compare(password, user.password);
         if(!isPasswordCorrect) {

@@ -3,3 +3,7 @@ export enum Gender {
   female = 'female',
 }
 export type TokenPayload = string | object | Buffer
+export type UserSearchParams = {
+  id?: string
+  email?: string
+}

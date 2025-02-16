@@ -2,6 +2,7 @@ import { Repository } from "typeorm";
 import User from "../entities/user";
 import AppDataSource from "../config/dbConnection";
 import { UserDto } from "../models/dto";
+import { UserSearchParams } from "../models/user.model";
 
 class UserService {
   private repository:Repository<User>;
@@ -13,8 +14,8 @@ class UserService {
     const result = await this.repository.save(user);
     return result;
   }
-  async findUser(email:string) {
-    const result = await this.repository.findOneBy({email});
+  async findUser(searchParam: UserSearchParams) {
+    const result = await this.repository.findOneBy(searchParam);
     return result;
   }
 };

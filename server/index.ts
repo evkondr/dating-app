@@ -8,6 +8,8 @@ import matchRoute from './routes/matchRoute';
 import messageRoute from './routes/messageRoute';
 import AppDataSource from './config/dbConnection';
 import cookieParser from 'cookie-parser';
+import errorMiddleware from './middleware/errorMiddleware';
+import User from './entities/user';
 
 dotenv.config();
 const app = express();
@@ -21,8 +23,8 @@ app.use('/api/auth', authRoute);
 app.use('/api/users', userRoute);
 app.use('/api/matches', matchRoute);
 app.use('/api/messages', messageRoute);
-
-
+//error middleware
+app.use(errorMiddleware);
 app.listen(5000, () => {
   console.log(`Server is running on port ${port}`);
   AppDataSource.initialize().then(() => {
@@ -31,3 +33,10 @@ app.listen(5000, () => {
     console.error("Error during Data Source initialization", err);
   })
 });
+declare global {
+  namespace Express {
+    interface Request {
+      user: User
+    }
+  }
+}
