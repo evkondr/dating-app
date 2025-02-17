@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from 'typeorm';
 import { Gender } from '../models/user.model';
 
 @Entity()
@@ -51,21 +51,45 @@ export default class User {
     })
     image: string
 
-    @Column({
-      type: 'simple-array',
-      nullable: true
+    @ManyToMany(() => User)
+    @JoinTable({
+      name: 'user_likes', // Название таблицы для связи
+      joinColumn: {
+        name: 'liked_user_id', // Колонка для ID пользователя, которого лайкнули
+        referencedColumnName: 'id',
+      },
+      inverseJoinColumn: {
+        name: 'liking_user_id', // Колонка для ID пользователя, который лайкнул
+        referencedColumnName: 'id',
+      },
     })
-    likes: string[]
+    likes:User[]
 
-    @Column({
-      type: 'simple-array',
-      nullable: true
+    @ManyToMany(() => User)
+    @JoinTable({
+      name: 'user_dislikes',
+      joinColumn: {
+        name: 'disliked_user_id',
+        referencedColumnName: 'id',
+      },
+      inverseJoinColumn: {
+        name: 'disliking_user_id',
+        referencedColumnName: 'id',
+      },
     })
-    dislikes: string[]
+    dislikes:User[]
 
-    @Column({
-      type: 'simple-array',
-      nullable: true
+    @ManyToMany(() => User)
+    @JoinTable({
+      name: 'user_matches',
+      joinColumn: {
+        name: 'user_1',
+        referencedColumnName: 'id',
+      },
+      inverseJoinColumn: {
+        name: 'user_2',
+        referencedColumnName: 'id',
+      },
     })
-    matches: string[]
+    matches:User[]
 }
