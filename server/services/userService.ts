@@ -2,7 +2,8 @@ import { Repository } from "typeorm";
 import User from "../entities/user";
 import AppDataSource from "../config/dbConnection";
 import { UpdateUserDto, UserDto } from "../models/dto";
-import { UserSearchParams } from "../models/user.model";
+import { UserRelations, UserSearchParams } from "../models/user.model";
+import { BlobOptions } from "buffer";
 
 class UserService {
   private repository:Repository<User>;
@@ -14,8 +15,11 @@ class UserService {
     const result = await this.repository.save(user);
     return result;
   }
-  async findUser(searchParam: UserSearchParams) {
-    const result = await this.repository.findOneBy(searchParam);
+  async findUser(searchParam: UserSearchParams, relations?:UserRelations) {
+    const result = await this.repository.findOne({
+      where: searchParam,
+      relations,
+    });
     return result;
   }
   async updateUser(user:User, updates:UpdateUserDto) {
