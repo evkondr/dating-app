@@ -10,7 +10,11 @@ export default class UserController {
     try {
       const userId = req.params.userId;
       const updates = req.body as UpdateUserDto;
-      const user = await userService.findUser({id: userId});
+      const user = await userService.findUser({
+        where: {
+          id:userId
+        }
+      });
       if(!user) {
         throw ErrorApi.NotFound(`User with id - ${userId} not found`);
       };

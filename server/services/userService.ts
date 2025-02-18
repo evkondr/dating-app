@@ -1,4 +1,4 @@
-import { Repository } from "typeorm";
+import { FindManyOptions, FindOneOptions, Repository } from "typeorm";
 import User from "../entities/user";
 import AppDataSource from "../config/dbConnection";
 import { UpdateUserDto, UserDto } from "../models/dto";
@@ -15,11 +15,12 @@ class UserService {
     const result = await this.repository.save(user);
     return result;
   }
-  async findUser(searchParam: UserSearchParams, relations?:UserRelations) {
-    const result = await this.repository.findOne({
-      where: searchParam,
-      relations,
-    });
+  async findUser(options:FindOneOptions<User>) {
+    const result = await this.repository.findOne(options);
+    return result;
+  }
+  async findManyUsers(options:FindManyOptions<User>) {
+    const result = await this.repository.find(options);
     return result;
   }
   async updateUser(user:User, updates:UpdateUserDto) {

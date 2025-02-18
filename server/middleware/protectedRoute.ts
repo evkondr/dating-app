@@ -13,7 +13,9 @@ const protectedRoute = async (req:Request, res:Response, next:NextFunction) => {
     if(!decoded){
       throw ErrorApi.Unauthorized()
     }
-    const user = await userService.findUser({id:decoded.id})
+    const user = await userService.findUser({where: {
+      id: decoded.id
+    }})
     if(!user) {
       throw ErrorApi.Unauthorized()
     }

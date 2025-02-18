@@ -13,7 +13,11 @@ export class AuthController {
       if(!name || !email || !age || !gender || !password || !genderPreference) {
         return res.status(400).json(standardResponse(false, 'All fields are required'));
       }
-      const isAlreadyExists = await userService.findUser(email);
+      const isAlreadyExists = await userService.findUser({
+        where: {
+          email
+        }
+      });
       if(isAlreadyExists) {
         return res.status(400).json(standardResponse(false, 'User with this email already exists'));
       }
@@ -42,7 +46,9 @@ export class AuthController {
   static async login(req:Request<User>, res:Response){
     try {
       const { email, password } = req.body;
-      const user = await userService.findUser({email});
+      const user = await userService.findUser({where:{
+        email
+      }});
       if(user){
         const isPasswordCorrect = await bcrypt.compare(password, user.password);
         if(!isPasswordCorrect) {
