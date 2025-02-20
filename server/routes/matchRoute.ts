@@ -4,8 +4,8 @@ import MatchController from '../controllers/matchController';
 
 const router = express.Router();
 
-router.post('/swipe-right', protectedRoute, MatchController.swipeRight);
-router.post('/swipe-left', protectedRoute, MatchController.swipeLeft);
+router.post('/swipe-right/:userId', protectedRoute, MatchController.swipeRight);
+router.post('/swipe-left/:userId', protectedRoute, MatchController.swipeLeft);
 
 router.get('/', protectedRoute, MatchController.getMatches);
 router.get('/user-profiles', protectedRoute, MatchController.userProfiles);

@@ -28,6 +28,9 @@ class UserService {
     const result = await this.repository.save(user);
     return result;
   }
+  async saveUser(user:User) {
+    return await this.repository.save(user);
+  }
 };
 
 export default new UserService();

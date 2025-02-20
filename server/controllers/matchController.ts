@@ -5,8 +5,63 @@ import { And, In, Not } from "typeorm";
 import ErrorApi from "../utils/errorApi";
 
 export default class MatchController {
-  static async swipeRight(req:Request, res:Response, next:NextFunction){}
-  static async swipeLeft(req:Request, res:Response, next:NextFunction){}
+  static async swipeRight(req:Request, res:Response, next:NextFunction){
+    try {
+      const { userId } = req.params;
+      const user = await userService.findUser({
+        where: {
+          id: userId
+        }
+      });
+      if(!user) {
+        throw ErrorApi.NotFound('User not found');
+      };
+      const currentUser = await userService.findUser({
+        where: {
+          id: req.user.id
+        }
+      });
+      if(!currentUser) {
+        throw ErrorApi.NotFound('Current user not found');
+      };
+      currentUser.likes.push(user);
+      if(user.likes.find((item) => item.id == currentUser.id)) {
+        currentUser.matches.push(user);
+        user.matches.push(currentUser);
+      }
+      await userService.saveUser(user);
+      const result = await userService.saveUser(user);
+      return res.status(200).json(standardResponse(true, 'User swiped to right', result));
+    } catch (error) {
+      next(error);
+    }
+  }
+  static async swipeLeft(req:Request, res:Response, next:NextFunction){
+    try {
+      const { userId } = req.params;
+      const user = await userService.findUser({
+        where: {
+          id: userId
+        }
+      });
+      if(!user) {
+        throw ErrorApi.NotFound('User not found');
+      };
+      const currentUser = await userService.findUser({
+        where: {
+          id: req.user.id
+        }
+      });
+      if(!currentUser) {
+        throw ErrorApi.NotFound('Current user not found');
+      };
+      currentUser.dislikes.push(user);
+      const result = await userService.saveUser(user);
+      return res.status(200).json(standardResponse(true, 'User swiped  to left', result));
+    } catch (error) {
+      next(error);
+    }
+  }
   static async getMatches(req:Request, res:Response, next:NextFunction){
     try {
       const currentUserId = req.user.id;
