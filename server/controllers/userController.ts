@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import ErrorApi from "../utils/errorApi";
 import { standardResponse } from "../utils/constants";
-import { UpdateUserDto } from "../models/dto";
+import { UpdateUserDto } from "../models/user/dto";
 import userService from "../services/userService";
 import deleteFile from "../utils/deleteFile";
 

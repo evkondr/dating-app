@@ -1,5 +1,5 @@
 import { Response } from "express";
-import { TokenPayload } from "../models/user.model";
+import { TokenPayload } from "../models/user/user.model";
 import { signToken } from "./token";
 
 const setCookies = (payload:TokenPayload, res:Response) => {

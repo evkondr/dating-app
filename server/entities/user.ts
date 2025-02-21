@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from 'typeorm';
-import { Gender } from '../models/user.model';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable, OneToMany, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Gender } from '../models/user/user.model';
+import Message from './message';
 
 @Entity()
 export default class User {
@@ -92,4 +93,23 @@ export default class User {
       },
     })
     matches:User[]
+    
+    @OneToMany(() => Message, (message) => message.sender)
+    sentMessages: Message[]
+
+    @OneToMany(() => Message, (message) => message.receiver)
+    receivedMessages: Message[]
+
+    @CreateDateColumn({
+      type: 'timestamp',
+      default: () => 'CURRENT_TIMESTAMP'
+    })
+    createdAt: Date;
+    
+    @UpdateDateColumn({
+      type: 'timestamp',
+      default: () => 'CURRENT_TIMESTAMP',
+      onUpdate: 'CURRENT_TIMESTAMP'
+    })
+    updatedAt: Date;
 }

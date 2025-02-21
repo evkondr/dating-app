@@ -1,8 +1,8 @@
 import { FindManyOptions, FindOneOptions, Repository } from "typeorm";
 import User from "../entities/user";
 import AppDataSource from "../config/dbConnection";
-import { UpdateUserDto, UserDto } from "../models/dto";
-import { UserRelations, UserSearchParams } from "../models/user.model";
+import { UpdateUserDto, UserDto } from "../models/user/dto";
+import { UserRelations, UserSearchParams } from "../models/user/user.model";
 import { BlobOptions } from "buffer";
 
 class UserService {
