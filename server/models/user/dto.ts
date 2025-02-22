@@ -1,3 +1,4 @@
+import Message from "../../entities/message"
 import { Gender } from "./user.model"
 
 export class UserDto {
