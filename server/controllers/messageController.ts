@@ -38,8 +38,8 @@ export default class MessageController {
       // TODO: refactor
       const result = await messageService.findManyMessages({
         where: {
-          sender: Or(Equal(receiver), Equal(req.user)),
-          receiver: Or(Equal(receiver), Equal(req.user))
+          sender: Or(Equal(receiver.id), Equal(req.user.id)),
+          receiver: Or(Equal(receiver.id), Equal(req.user.id))
         },
         order: {
           createdAt: 'ASC'
