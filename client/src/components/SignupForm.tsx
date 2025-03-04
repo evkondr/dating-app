@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import TextField from './fields/TextField';
 import Checkbox from './fields/Checkbox';
-
+import RadioButton from './fields/RadioButton';
+import Button from './buttons/Button';
+const loading = false;
 const SignupForm = () => {
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
@@ -81,6 +83,33 @@ const SignupForm = () => {
         value="female"
         onChange={(e:React.ChangeEvent<HTMLInputElement>) => setGender(e.target.value)}
       />
+      <div>
+        <label className="block txt-sm font-medium text-gray-700">Prefer Me</label>
+        <div className="mt-2 space-y-2">
+          <RadioButton
+            label="Male"
+            id="prefer-male"
+            name="male"
+            checked={genderPreference == 'male'}
+            value="male"
+            onChange={(e:React.ChangeEvent<HTMLInputElement>) => setGenderPreference(e.target.value)}
+          />
+          <RadioButton
+            label="Female"
+            id="prefer-female"
+            name="female"
+            checked={genderPreference == 'female'}
+            value="female"
+            onChange={(e:React.ChangeEvent<HTMLInputElement>) => setGenderPreference(e.target.value)}
+          />
+        </div>
+      </div>
+      <Button
+        type="submit"
+        disabled={loading}
+      >
+        {loading ? 'Signing up...' : 'Sign up'}
+      </Button>
     </form>
   );
 };
