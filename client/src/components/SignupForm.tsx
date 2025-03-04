@@ -3,7 +3,8 @@ import TextField from './fields/TextField';
 import Checkbox from './fields/Checkbox';
 import RadioButton from './fields/RadioButton';
 import Button from './buttons/Button';
-const loading = false;
+import useAuthStore from '../store/useAuth';
+
 const SignupForm = () => {
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
@@ -11,14 +12,20 @@ const SignupForm = () => {
   const [gender, setGender] = useState<string>('');
   const [age, setAge] = useState<string>('');
   const [genderPreference, setGenderPreference] = useState<string>('');
+  // Store
+  const { signup, loading } = useAuthStore();
 
-  const signUp = () => {
-    console.log('sign up ');
-  };
   return (
     <form className="space-y-6" onSubmit={(e) => {
       e.preventDefault();
-      signUp();
+      signup({
+        name,
+        email,
+        password,
+        age: Number(age),
+        gender,
+        genderPreference,
+      });
     }}>
       <div>
         <TextField

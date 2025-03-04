@@ -7,7 +7,7 @@ const LoginForm = () => {
   const [password, setPassword] = useState<string>('');
   const loading = false;
   return (
-    <form className="space-y-6">
+    <form className="space-y-6" onSubmit={() => {}}>
       <div>
         <TextField
           label="Email"
