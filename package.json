@@ -4,7 +4,7 @@
   "description": "",
   "main": "server/index.ts",
   "scripts": {
-    "dev": "nodemon"
+    "dev": "nodemon --ignore client/*"
   },
   "author": "",
   "license": "ISC",
