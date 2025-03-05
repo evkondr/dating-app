@@ -15,10 +15,11 @@ interface IAuthStore {
 
 const useAuthStore = create<IAuthStore>((set) => ({
   authUser: null,
-  checkingAuth: true,
+  checkingAuth: false,
   loading: false,
   checkAuth: async () => {
     try {
+      set({checkingAuth: true});
       const response = await axiosInstance.get('/auth/check');
       set({authUser: response.data.payload});
     } catch (error) {
@@ -27,6 +28,8 @@ const useAuthStore = create<IAuthStore>((set) => ({
       } else {
         toast.error('something went wrong');
       }
+    } finally {
+      set({checkingAuth: false});
     }
   },
   signup: async (data:SignupData) => {

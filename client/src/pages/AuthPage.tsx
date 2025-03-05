@@ -1,9 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import LoginForm from '../components/LoginForm';
 import SignupForm from '../components/SignupForm';
+import useAuthStore from '../store/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState<boolean>(true);
+  const { authUser } = useAuthStore();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if(authUser) {
+      navigate('/');
+    }
+  }, [authUser]);
   return (
     <div className='min-h-screen
     flex items-center
