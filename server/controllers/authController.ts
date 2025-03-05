@@ -1,9 +1,10 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import User from "../entities/user";
 import { standardResponse } from "../utils/constants";
 import userService from "../services/userService";
 import setCookies from "../utils/setCookies";
+import ErrorApi from "../utils/errorApi";
 
 export class AuthController {
   // SIGNUP
@@ -30,10 +31,7 @@ export class AuthController {
         name, email, age, password: hashedPassword, gender, genderPreference
       });
       setCookies({id: user.id}, res);
-      return res.status(201).json({
-        success: true,
-        user
-      })
+      return res.status(201).json(standardResponse(true, 'success', user))
     } catch(error){
       if(error instanceof Error) {
         return res.status(500).json(standardResponse(false, error.message))
@@ -73,5 +71,16 @@ export class AuthController {
   static async logout(req:Request, res:Response){
     res.clearCookie('jwt');
     return res.status(200).json(standardResponse(true, 'logged out successfully'));
+  }
+  // CHECK AUTH
+  static async checkAuth(req:Request, res:Response, next:NextFunction){
+    try {
+      if(req.user) {
+        throw ErrorApi.Unauthorized();
+      }
+      return res.status(200).json(standardResponse(true, 'successfully', req.user));
+    } catch (error) {
+      next(error);
+    }
   }
 }
