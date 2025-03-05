@@ -10,7 +10,7 @@ const AuthPage = () => {
   const navigate = useNavigate();
   useEffect(() => {
     if(authUser) {
-      navigate('/');
+      navigate('/', { replace: true});
     }
   }, [authUser]);
   return (

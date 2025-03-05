@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import axiosInstance from '../components/lib/axios';
-import { SignupData } from '../models/auth';
+import { LoginData, SignupData } from '../models/auth';
 import toast from 'react-hot-toast';
 import { isAxiosError } from 'axios';
 import { User } from '../models/user';
@@ -11,6 +11,7 @@ interface IAuthStore {
   loading: boolean,
   checkAuth: () => Promise<void>,
   signup: (data:SignupData) => Promise<void>,
+  login: (data:LoginData) => Promise<void>,
 }
 
 const useAuthStore = create<IAuthStore>((set) => ({
@@ -34,14 +35,39 @@ const useAuthStore = create<IAuthStore>((set) => ({
   },
   signup: async (data:SignupData) => {
     try {
+      set({loading: true});
       const response = await axiosInstance.post('/auth/signup', data);
-      set({authUser: response.data.payload});
+      set({
+        authUser: response.data.payload,
+        loading: false
+      });
     } catch (error) {
       if(isAxiosError(error)) {
         toast.error(error.response?.data.message);
       } else {
         toast.error('something went wrong');
       }
+    } finally {
+      set({loading: false});
+    }
+  },
+  login: async (data:LoginData) => {
+    try {
+      set({loading: true});
+      const response = await axiosInstance.post('/auth/login', data);
+      toast.success('Glad to see you again');
+      set({
+        authUser: response.data.payload,
+        loading: false
+      });
+    } catch (error) {
+      if(isAxiosError(error)) {
+        toast.error(error.response?.data.message);
+      } else {
+        toast.error('something went wrong');
+      }
+    } finally {
+      set({loading: false});
     }
   }
 }));

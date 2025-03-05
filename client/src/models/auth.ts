@@ -10,3 +10,7 @@ export type SignupData = {
   gender: string,
   genderPreference: string,
 }
+export type LoginData = {
+  email: string,
+  password: string,
+}

@@ -53,10 +53,7 @@ export class AuthController {
           return res.status(400).json(standardResponse(false, 'Wrong credentials'));
         };
         setCookies({id: user.id}, res);
-        return res.status(200).json({
-          success: true,
-          user
-        });
+        return res.status(200).json(standardResponse(true, 'success', user));
       };
       return res.status(400).json(standardResponse(false, 'Wrong credentials'));
     } catch (error) {
@@ -75,7 +72,7 @@ export class AuthController {
   // CHECK AUTH
   static async checkAuth(req:Request, res:Response, next:NextFunction){
     try {
-      if(req.user) {
+      if(!req.user) {
         throw ErrorApi.Unauthorized();
       }
       return res.status(200).json(standardResponse(true, 'successfully', req.user));
