@@ -12,6 +12,7 @@ interface IAuthStore {
   checkAuth: () => Promise<void>,
   signup: (data:SignupData) => Promise<void>,
   login: (data:LoginData) => Promise<void>,
+  logout: () => Promise<void>,
 }
 
 const useAuthStore = create<IAuthStore>((set) => ({
@@ -68,6 +69,19 @@ const useAuthStore = create<IAuthStore>((set) => ({
     } finally {
       set({loading: false});
     }
+  },
+  logout: async () => {
+    try {
+      await axiosInstance.post('/auth/logout');
+      set({authUser: null});
+    } catch (error) {
+      if(isAxiosError(error)) {
+        toast.error(error.response?.data.message);
+      } else {
+        toast.error('something went wrong');
+      }
+    }
+    
   }
 }));
 
