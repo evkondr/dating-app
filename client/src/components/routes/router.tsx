@@ -1,22 +1,21 @@
 import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
-import HomePage from '../pages/HomePage';
-import AuthPage from '../pages/AuthPage';
-import ProfilePage from '../pages/ProfilePage';
-import ChatPage from '../pages/ChatPage';
-import App from '../App';
+import HomePage from '../../pages/HomePage';
+import AuthPage from '../../pages/AuthPage';
+import ProfilePage from '../../pages/ProfilePage';
+import ChatPage from '../../pages/ChatPage';
+import App from '../../App';
+import PrivateRoute from './PrivateRoute';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <App />,
+    element: <PrivateRoute>
+      <App />
+    </PrivateRoute>,
     children: [
       {
         index: true, element: <HomePage />
-      },
-      {
-        path: '/auth',
-        element: <AuthPage />
       },
       {
         path: '/profile',
@@ -27,6 +26,10 @@ const router = createBrowserRouter([
         element: <ChatPage />
       },
     ]
+  },
+  {
+    path: '/auth',
+    element: <AuthPage />
   },
 ]);
 export default router;

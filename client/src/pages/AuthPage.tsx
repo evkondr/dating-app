@@ -1,18 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import LoginForm from '../components/LoginForm';
-import SignupForm from '../components/SignupForm';
+import LoginForm from '../components/form/LoginForm';
+import SignupForm from '../components/form/SignupForm';
 import useAuthStore from '../store/useAuth';
-import { useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
+import Loader from '../components/Loader';
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState<boolean>(true);
-  const { authUser } = useAuthStore();
-  const navigate = useNavigate();
+  const { authUser, checkAuth, checkingAuth } = useAuthStore();
+
   useEffect(() => {
-    if(authUser) {
-      navigate('/', { replace: true});
-    }
-  }, [authUser]);
+    checkAuth();
+  }, [checkAuth]);
+
+  if(checkingAuth){
+    return (<Loader />);
+  }
+  if(authUser) {
+    return (<Navigate to='/' replace />);
+  }
   return (
     <div className='min-h-screen
     flex items-center

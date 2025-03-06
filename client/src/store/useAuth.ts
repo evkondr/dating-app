@@ -16,13 +16,12 @@ interface IAuthStore {
 
 const useAuthStore = create<IAuthStore>((set) => ({
   authUser: null,
-  checkingAuth: false,
+  checkingAuth: true,
   loading: false,
   checkAuth: async () => {
     try {
-      set({checkingAuth: true});
       const response = await axiosInstance.get('/auth/check');
-      set({authUser: response.data.payload});
+      set({authUser: response.data.payload, checkingAuth: false});
     } catch (error) {
       if(isAxiosError(error)) {
         toast.error(error.response?.data.message);
@@ -36,7 +35,7 @@ const useAuthStore = create<IAuthStore>((set) => ({
   signup: async (data:SignupData) => {
     try {
       set({loading: true});
-      const response = await axiosInstance.post('/auth/signup', data);
+      const response = await axiosInstance.post<{payload:User}>('/auth/signup', data);
       set({
         authUser: response.data.payload,
         loading: false

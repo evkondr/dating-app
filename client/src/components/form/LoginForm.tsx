@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import Button from './buttons/Button';
-import TextField from './fields/TextField';
-import useAuthStore from '../store/useAuth';
+import Button from '../buttons/Button';
+import TextField from '../fields/TextField';
+import useAuthStore from '../../store/useAuth';
 
 const LoginForm = () => {
   const [email, setEmail] = useState<string>('');

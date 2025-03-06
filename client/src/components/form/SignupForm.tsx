@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import TextField from './fields/TextField';
-import Checkbox from './fields/Checkbox';
-import RadioButton from './fields/RadioButton';
-import Button from './buttons/Button';
-import useAuthStore from '../store/useAuth';
+import TextField from '../fields/TextField';
+import Checkbox from '../fields/Checkbox';
+import RadioButton from '../fields/RadioButton';
+import Button from '../buttons/Button';
+import useAuthStore from '../../store/useAuth';
 
 const SignupForm = () => {
   const [name, setName] = useState<string>('');
