@@ -2,6 +2,7 @@ import React, { SyntheticEvent, useEffect, useRef, useState } from 'react';
 import useAuthStore from '../store/useAuth';
 import { Link } from 'react-router-dom';
 import { Flame, LogOut, Menu, User } from 'lucide-react';
+import HeaderNav from './HeaderNav';
 
 const Header = () => {
   const {authUser, logout} = useAuthStore();
@@ -19,7 +20,7 @@ const Header = () => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
-    }
+    };
   }, []);
   return (
     <header className="bg-gradient-to-r from-pink-500 via-pink-600 to-pink-700 show-lg">
@@ -46,40 +47,12 @@ const Header = () => {
                 </button>
                 {dropdownOpen && (
                   <div className='absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10'>
-                    <Link
-                      to='/profile'
-                      className='px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center'
-                      onClick={() => setDropdownOpen(false)}
-                    >
-                      <User className='mr-2' size={16} />
-											Profile
-                    </Link>
-                    <button
-                      onClick={logout}
-                      className='w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center'
-                    >
-                      <LogOut className='mr-2' size={16} />
-											Logout
-                    </button>
+                    <HeaderNav isAuth clickHandler={() => setDropdownOpen(false)}/>
                   </div>
                 )}
               </div>
             ):(
-              <>
-                <Link
-                  to='/auth'
-                  className='text-white hover:text-pink-200 transition duration-150 ease-in-out'
-                >
-                Login
-                </Link>
-                <Link
-                  to='/auth'
-                  className='bg-white text-pink-600 px-4 py-2 rounded-full font-medium
-                 hover:bg-pink-100 transition duration-150 ease-in-out'
-                >
-                Sign Up
-                </Link>
-              </>
+              <HeaderNav />
             )}
           </div>
           <div className='md:hidden'>
@@ -92,6 +65,18 @@ const Header = () => {
           </div>
         </div>
       </div>
+      {/* MOBILE MENU */}
+      {mobileMenuOpen && (
+        <div className='md:hidden bg-pink-600'>
+          <div className='px-2 pt-2 pb-3 space-y-1 sm:px-3'>
+            {authUser ? (
+              <HeaderNav isAuth isMobile clickHandler={() => setMobileMenuOpen(false)}/>
+            ) : (
+              <HeaderNav isMobile clickHandler={() => setMobileMenuOpen(false)}/>
+            )}
+          </div>
+        </div>
+      )}
     </header>
   );
 };
