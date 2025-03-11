@@ -4,9 +4,10 @@ export type User = {
   email: string
   age: number
   bio: string
-  image: string
+  image: string | null
   gender: string
   genderPreference: string
   createdAt: string
   updatedAt: string
 }
+export type UpdateUserDto = Omit<User, 'id' | 'email' | 'createdAt' | 'updatedAt' >
