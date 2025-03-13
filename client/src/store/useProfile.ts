@@ -12,11 +12,22 @@ const useProfileStore = create<IProfileStore>((set) => ({
   async updateProfile(data:UpdateUserDto) {
     try {
       set({ loading: true});
-      await axiosInstance.put('/users/update', data);
-      toast.error('Successfully updated');
+      const formData = new FormData();
+      (Object.keys(data) as Array<keyof UpdateUserDto>).forEach((key) => {
+        formData.append(key, String(data[key]));
+      });
+      if(data.image){
+        formData.append('image', data.image);
+      }
+      await axiosInstance.put('/users/update', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      toast.success('Successfully updated');
     } catch (error) {
       if(isAxiosError(error)) {
-        toast.error(error.response?.data.message);
+        toast.error(error.response?.data.message || 'something went wrong');
       } else {
         toast.error('something went wrong');
       }

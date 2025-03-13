@@ -39,7 +39,7 @@ const Header = () => {
                   className="flex items-center space-x-2 focus:outline-none"
                   onClick={() => setDropdownOpen(!dropdownOpen)}>
                   <img
-                    src={authUser.image || '/avatar-thumbnail.png'}
+                    src={authUser.image ? `http://localhost:5000/${authUser.image}` : '/avatar-thumbnail.png'}
                     className="h-10 w-10 object-cover rounded-full border-2 border-white"
                     alt='User image'
                   />

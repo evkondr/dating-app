@@ -12,6 +12,7 @@ import AppDataSource from './config/dbConnection';
 import cookieParser from 'cookie-parser';
 import errorMiddleware from './middleware/errorMiddleware';
 import User from './entities/user';
+import path from 'path';
 
 dotenv.config();
 const app = express();
@@ -24,7 +25,9 @@ app.use(morgan('dev'));
 app.use(cors({
   origin: 'http://localhost:5173',
   credentials: true,
+  methods:  'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS'
 }));
+app.use('/', express.static(path.join(__dirname, 'uploads')))
 
 app.use('/api/auth', authRoute);
 app.use('/api/users', userRoute);

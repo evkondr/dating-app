@@ -3,6 +3,7 @@ import Header from '../components/Header';
 import useAuthStore from '../store/useAuth';
 import useProfileStore from '../store/useProfile';
 import TextField from '../components/fields/TextField';
+import { baseApiUrl } from '../components/lib/axios';
 
 const ProfilePage = () => {
   const { authUser } = useAuthStore();
@@ -11,20 +12,20 @@ const ProfilePage = () => {
   const [bio, setBio] = useState(authUser?.bio || '');
   const [age, setAge] = useState(authUser?.age);
   const [gender, setGender] = useState(authUser?.gender || '');
-  const [image, setImage] = useState<string | null>(authUser?.image || null);
+  const [image, setImage] = useState<string>(authUser?.image ? baseApiUrl + authUser.image : '');
+  const [formDataImage, setFormDataImage] = useState<File | null>(null);
   const [genderPreference, setGenderPreference] = useState(authUser?.genderPreference || '');
 
   const fileInputRef = useRef<null | HTMLInputElement>(null);
   
-  
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    updateProfile({ name, bio, age:Number(age), gender, genderPreference, image });
+    updateProfile({ name, bio, age:Number(age), gender, genderPreference, image: formDataImage });
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
+    setFormDataImage(file);
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
