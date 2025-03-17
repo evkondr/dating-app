@@ -1,11 +1,11 @@
-import React, { SyntheticEvent, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import useAuthStore from '../store/useAuth';
 import { Link } from 'react-router-dom';
-import { Flame, LogOut, Menu, User } from 'lucide-react';
+import { Flame, Menu} from 'lucide-react';
 import HeaderNav from './HeaderNav';
 
 const Header = () => {
-  const {authUser, logout} = useAuthStore();
+  const {authUser } = useAuthStore();
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const dropdownRef = useRef<null | HTMLDivElement>(null);
