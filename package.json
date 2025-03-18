@@ -4,7 +4,8 @@
   "description": "",
   "main": "server/index.ts",
   "scripts": {
-    "dev": "nodemon --ignore client/*"
+    "dev": "nodemon --ignore client/*",
+    "seed": "ts-node server/seeds/seed.ts"
   },
   "author": "",
   "license": "ISC",

@@ -94,10 +94,15 @@ export default class User {
     })
     matches:User[]
     
-    @OneToMany(() => Message, (message) => message.sender)
+    @OneToMany(() => Message, (message) => message.sender, {
+      onDelete: 'CASCADE'
+    })
     sentMessages: Message[]
 
-    @OneToMany(() => Message, (message) => message.receiver)
+    @OneToMany(() => Message, (message) => message.receiver, {
+     onDelete: 'CASCADE'
+    }
+    )
     receivedMessages: Message[]
 
     @CreateDateColumn({
