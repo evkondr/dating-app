@@ -6,6 +6,8 @@ import Header from '../components/Header';
 
 import NoMoreProfiles from '../components/NoMoreProfiles';
 import Loader from '../components/Loader';
+import SwipeArea from '../components/SwipeArea';
+import SwipeFeedback from '../components/SwipeFeedback';
 
 const HomePage = () => {
   const { getProfiles, profiles, loadingProfiles } = useMatchStore();
@@ -24,9 +26,10 @@ const HomePage = () => {
         <Header />
         <main className='flex-grow flex flex-col gap-10 justify-center items-center p-4 relative overflow-hidden'>
           {profiles.length > 0 && !loadingProfiles && (
-            <div>
-              users
-            </div>
+            <>
+              <SwipeArea />
+              <SwipeFeedback />
+            </>
           )}
           {profiles.length === 0 && !loadingProfiles && <NoMoreProfiles />}
 
