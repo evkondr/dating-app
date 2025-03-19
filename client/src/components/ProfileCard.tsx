@@ -3,11 +3,11 @@ import { useSpring, animated } from '@react-spring/web';
 import { useSwipeable } from 'react-swipeable';
 
 interface IProps { 
-  children: React.JSX.Element
+  children: React.ReactNode
   onSwipeLeft?: () => void
   onSwipeRight?: () => void
 }
-const ProfileCard = ({ children, onSwipeLeft, onSwipeRight }:IProps) => {
+const ProfileCard:React.FC<IProps> = ({ children, onSwipeLeft, onSwipeRight }) => {
   const [isSwiped, setIsSwiped] = useState<boolean>(false);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [currentX, setCurrentX] = useState<number>(0);
@@ -37,14 +37,13 @@ const ProfileCard = ({ children, onSwipeLeft, onSwipeRight }:IProps) => {
     config: { tension: 200, friction: 20 },
   });
   return (
+    //@ts-ignore
     <animated.div
       {...handlers}
+      className="absolute shadow-none"
       style={{
         transform: x.to((x) => `translate3d(${x}px, 0, 0)`),
         opacity,
-        position: 'absolute',
-        width: '100%',
-        height: '100%',
         cursor: 'grab',
       }}>
       {children}
