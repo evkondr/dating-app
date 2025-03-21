@@ -11,6 +11,7 @@ interface IMatchesStore {
   loadingProfiles: boolean,
   getMatches: () => Promise<void>
   getProfiles: () => Promise<void>
+  swipeFeedback: string | null
 }
 
 const useMatchStore = create<IMatchesStore>((set) => ({
@@ -18,6 +19,7 @@ const useMatchStore = create<IMatchesStore>((set) => ({
   profiles: [],
   loadingMatches: false,
   loadingProfiles: false,
+  swipeFeedback: null,
   getMatches: async () => {
     try {
       set({loadingMatches: true});
@@ -47,6 +49,34 @@ const useMatchStore = create<IMatchesStore>((set) => ({
       set({ profiles: []});
     } finally {
       set({loadingProfiles: false});
+    }
+  },
+  swipeRight: async (userId:string) => {
+    try {
+      await axiosInstance.post(`/matches/swipe-right/${userId}`);
+      set({swipeFeedback: 'liked'});
+    } catch (error) {
+      if(isAxiosError(error)) {
+        toast.error(error.response?.data.message || 'something went wrong');
+      } else {
+        toast.error('something went wrong');
+      }
+    } finally {
+      setTimeout(() => set({swipeFeedback: null}), 1500);
+    }
+  },
+  swipeLeft: async (userId:string) => {
+    try {
+      await axiosInstance.post(`/matches/swipe-left/${userId}`);
+      set({swipeFeedback: 'passed'});
+    } catch (error) {
+      if(isAxiosError(error)) {
+        toast.error(error.response?.data.message || 'something went wrong');
+      } else {
+        toast.error('something went wrong');
+      }
+    } finally {
+      setTimeout(() => set({swipeFeedback: null}), 1500);
     }
   },
 })
