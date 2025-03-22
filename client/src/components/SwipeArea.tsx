@@ -3,15 +3,13 @@ import useMatchStore from '../store/useMatch';
 import ProfileCard from './ProfileCard';
 
 const SwipeArea = () => {
-  const { profiles } = useMatchStore();
-  const swipeLeft = () => { console.log('left'); };
-  const swipeRight = () => { console.log('right'); };
+  const { profiles, swipe } = useMatchStore();
   return (
     <div className='relative w-full max-w-sm h-[28rem]'>
       {profiles.map((user) => (
         <ProfileCard
-          onSwipeLeft={swipeLeft}
-          onSwipeRight={swipeRight}
+          onSwipeLeft={() => swipe(user.id, 'left')}
+          onSwipeRight={() => swipe(user.id, 'right')}
           key={user.id}
         >
           <div className='card bg-white w-96 h-[28rem] select-none rounded-lg overflow-hidden border border-gray-200'>

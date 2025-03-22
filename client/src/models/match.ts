@@ -1,0 +1,1 @@
+export type SwipePath = 'right' | 'left'

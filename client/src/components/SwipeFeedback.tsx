@@ -3,13 +3,13 @@ import useMatchStore from '../store/useMatch';
 
 const SwipeFeedback = () => {
   const { swipeFeedback } = useMatchStore();
-  const getFeedbackStyle = (swipeFeedback: string) => {
+  const getFeedbackStyle = (swipeFeedback: string | null) => {
     if (swipeFeedback === 'liked') return 'text-green-500';
     if (swipeFeedback === 'passed') return 'text-red-500';
     if (swipeFeedback === 'matched') return 'text-pink-500';
     return '';
   };
-  const getFeedbackText = (swipeFeedback:string) => {
+  const getFeedbackText = (swipeFeedback:string | null) => {
     if (swipeFeedback === 'liked') return 'Liked!';
     if (swipeFeedback === 'passed') return 'Passed';
     if (swipeFeedback === 'matched') return 'It\'s a Match!';

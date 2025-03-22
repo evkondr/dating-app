@@ -3,6 +3,7 @@ import { User } from '../models/user';
 import { AxiosResponse, isAxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import axiosInstance from '../components/lib/axios';
+import { SwipePath } from '../models/match';
 
 interface IMatchesStore {
   matches: User[]
@@ -12,6 +13,7 @@ interface IMatchesStore {
   getMatches: () => Promise<void>
   getProfiles: () => Promise<void>
   swipeFeedback: string | null
+  swipe: (id: string, path: SwipePath) => void 
 }
 
 const useMatchStore = create<IMatchesStore>((set) => ({
@@ -51,24 +53,15 @@ const useMatchStore = create<IMatchesStore>((set) => ({
       set({loadingProfiles: false});
     }
   },
-  swipeRight: async (userId:string) => {
+  swipe: async (userId:string, path:SwipePath) => {
     try {
-      await axiosInstance.post(`/matches/swipe-right/${userId}`);
-      set({swipeFeedback: 'liked'});
-    } catch (error) {
-      if(isAxiosError(error)) {
-        toast.error(error.response?.data.message || 'something went wrong');
+      if(path == 'right') {
+        await axiosInstance.post(`/matches/swipe-right/${userId}`);
+        set({swipeFeedback: 'liked'});
       } else {
-        toast.error('something went wrong');
+        await axiosInstance.post(`/matches/swipe-left/${userId}`);
+        set({swipeFeedback: 'passed'});
       }
-    } finally {
-      setTimeout(() => set({swipeFeedback: null}), 1500);
-    }
-  },
-  swipeLeft: async (userId:string) => {
-    try {
-      await axiosInstance.post(`/matches/swipe-left/${userId}`);
-      set({swipeFeedback: 'passed'});
     } catch (error) {
       if(isAxiosError(error)) {
         toast.error(error.response?.data.message || 'something went wrong');
