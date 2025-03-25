@@ -4,6 +4,7 @@ import { LoginData, SignupData } from '../models/auth';
 import toast from 'react-hot-toast';
 import { isAxiosError } from 'axios';
 import { User } from '../models/user';
+import { initSocket } from '../socket/socket.client';
 
 interface IAuthStore {
   authUser: null | User,
@@ -21,7 +22,8 @@ const useAuthStore = create<IAuthStore>((set) => ({
   loading: false,
   checkAuth: async () => {
     try {
-      const response = await axiosInstance.get('/auth/check');
+      const response = await axiosInstance.get<{payload: User}>('/auth/check');
+      initSocket(response.data.payload.id);
       set({authUser: response.data.payload, checkingAuth: false});
     } catch (error) {
       if(isAxiosError(error)) {
@@ -37,6 +39,7 @@ const useAuthStore = create<IAuthStore>((set) => ({
     try {
       set({loading: true});
       const response = await axiosInstance.post<{payload:User}>('/auth/signup', data);
+      initSocket(response.data.payload.id);
       set({
         authUser: response.data.payload,
         loading: false
@@ -54,8 +57,9 @@ const useAuthStore = create<IAuthStore>((set) => ({
   login: async (data:LoginData) => {
     try {
       set({loading: true});
-      const response = await axiosInstance.post('/auth/login', data);
+      const response = await axiosInstance.post<{payload: User}>('/auth/login', data);
       toast.success('Glad to see you again');
+      initSocket(response.data.payload.id);
       set({
         authUser: response.data.payload,
         loading: false
