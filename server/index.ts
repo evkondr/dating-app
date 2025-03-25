@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
 import cors from 'cors';
+import { createServer } from "http";
 
 //Routes
 import authRoute from './routes/authRoute';
@@ -17,13 +18,13 @@ import path from 'path';
 dotenv.config();
 const app = express();
 const port = process.env.PORT  || 5000;
-
+const httpServer = createServer(app);
 //Middleware
 app.use(cookieParser());
 app.use(express.json());
 app.use(morgan('dev'));
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: process.env.CLIENT_URL,
   credentials: true,
   methods:  'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS'
 }));
@@ -35,7 +36,7 @@ app.use('/api/matches', matchRoute);
 app.use('/api/messages', messageRoute);
 //error middleware
 app.use(errorMiddleware);
-app.listen(5000, () => {
+httpServer.listen(5000, () => {
   console.log(`Server is running on port ${port}`);
   AppDataSource.initialize().then(() => {
     console.log("Data Source has been initialized!");
