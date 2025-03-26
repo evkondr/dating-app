@@ -3,6 +3,7 @@ import userService from "../services/userService";
 import { standardResponse } from "../utils/constants";
 import { And, In, Not } from "typeorm";
 import ErrorApi from "../utils/errorApi";
+import { getIO, getOnlineUsers } from "../socket/socket.server";
 
 export default class MatchController {
   static async swipeRight(req:Request, res:Response, next:NextFunction){
@@ -26,11 +27,31 @@ export default class MatchController {
       };
       currentUser.likes.push(user);
       if(user.likes.find((item) => item.id == currentUser.id)) {
+        // if likes matched 
         currentUser.matches.push(user);
         user.matches.push(currentUser);
+        // send notification with socket.io to both online users
+        const onlineUsers = getOnlineUsers();
+        const io = getIO();
+        const likedUserSocketId = onlineUsers.get(user.id);
+        if(likedUserSocketId) {
+          io.to(likedUserSocketId).emit('newMatch', {
+            id: currentUser.id,
+            name: currentUser.name,
+            image: currentUser.image
+          })
+        }
+        const currentUserSocketId = onlineUsers.get(currentUser.id);
+        if(currentUserSocketId) {
+          io.to(currentUserSocketId).emit('newMatch', {
+            id: user.id,
+            name: user.name,
+            image: user.image
+          })
+        }
       }
       await userService.saveUser(user);
-      const result = await userService.saveUser(user);
+      const result = await userService.saveUser(currentUser);
       return res.status(200).json(standardResponse(true, 'User swiped to right', result));
     } catch (error) {
       next(error);
