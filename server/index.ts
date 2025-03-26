@@ -14,11 +14,13 @@ import cookieParser from 'cookie-parser';
 import errorMiddleware from './middleware/errorMiddleware';
 import User from './entities/user';
 import path from 'path';
+import { initSocket } from './socket/socket.server';
 
 dotenv.config();
 const app = express();
 const port = process.env.PORT  || 5000;
 const httpServer = createServer(app);
+initSocket(httpServer);
 //Middleware
 app.use(cookieParser());
 app.use(express.json());
