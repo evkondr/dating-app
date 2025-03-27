@@ -12,6 +12,11 @@ export default class MatchController {
       const user = await userService.findUser({
         where: {
           id: userId
+        },
+        relations: {
+          dislikes: true,
+          likes: true,
+          matches: true
         }
       });
       if(!user) {
@@ -20,6 +25,11 @@ export default class MatchController {
       const currentUser = await userService.findUser({
         where: {
           id: req.user.id
+        },
+        relations: {
+          dislikes: true,
+          likes: true,
+          matches: true
         }
       });
       if(!currentUser) {
@@ -63,6 +73,11 @@ export default class MatchController {
       const user = await userService.findUser({
         where: {
           id: userId
+        },
+        relations: {
+          dislikes: true,
+          likes: true,
+          matches: true
         }
       });
       if(!user) {
@@ -71,6 +86,11 @@ export default class MatchController {
       const currentUser = await userService.findUser({
         where: {
           id: req.user.id
+        },
+        relations: {
+          dislikes: true,
+          likes: true,
+          matches: true
         }
       });
       if(!currentUser) {
@@ -115,17 +135,29 @@ export default class MatchController {
         throw ErrorApi.NotFound('User not found')
       }
       // Profiles to display
-      const profiles = await userService.findManyUsers({
-        where:{
-          // Eliminate who already liked, disliked, exists in matches
-          id:And(
-            Not(In(currentUser.likes)),
-            Not(In(currentUser.dislikes)),
-            Not(In(currentUser.matches))
+      // const profiles = await userService.findManyUsers({
+      //   where:{
+      //     // Eliminate who already liked, disliked, exists in matches
+      //     // id:And(
+      //     //   Not(In(currentUser.likes)),
+      //     //   Not(In(currentUser.dislikes)),
+      //     //   Not(In(currentUser.matches))
+      //     // ),
+      //     gender: currentUser.genderPreference,
+      //     genderPreference: currentUser.gender
+      //   }
+      // });
+      const likedUsers = currentUser.likes.map((user) => user.id);
+      const dislikedUsers = currentUser.dislikes.map((user) => user.id);
+      const matchedUsers = currentUser.matches.map((user) => user.id);
+      const profiles = await userService.findBy({
+        id:And(
+            Not(In(likedUsers)),
+            Not(In(dislikedUsers)),
+            Not(In(matchedUsers))
           ),
           gender: currentUser.genderPreference,
           genderPreference: currentUser.gender
-        }
       });
       return res.status(200).json(standardResponse(true, 'Profiles received', profiles));
     } catch (error) {

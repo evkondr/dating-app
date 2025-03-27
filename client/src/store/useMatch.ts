@@ -4,6 +4,7 @@ import { AxiosResponse, isAxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import axiosInstance from '../components/lib/axios';
 import { SwipePath } from '../models/match';
+import { getSocket } from '../socket/socket.client';
 
 interface IMatchesStore {
   matches: User[]
@@ -13,7 +14,9 @@ interface IMatchesStore {
   getMatches: () => Promise<void>
   getProfiles: () => Promise<void>
   swipeFeedback: string | null
-  swipe: (id: string, path: SwipePath) => void 
+  swipe: (id: string, path: SwipePath) => void
+  subscribeToNewMatches: () => void
+  unsubscribeFromNewMatches: () => void
 }
 
 const useMatchStore = create<IMatchesStore>((set) => ({
@@ -72,6 +75,35 @@ const useMatchStore = create<IMatchesStore>((set) => ({
       setTimeout(() => set({swipeFeedback: null}), 1500);
     }
   },
+  subscribeToNewMatches: () => {
+    try {
+      const socket = getSocket();
+      socket.on('newMatch', (data:User) => {
+        set((state) => ({
+          matches: [...state.matches, data]
+        }));
+        toast.success('New match!');
+      });
+    } catch (error) {
+      if(isAxiosError(error)) {
+        toast.error(error.response?.data.message || 'something went wrong');
+      } else {
+        toast.error('something went wrong');
+      }
+    }
+  },
+  unsubscribeFromNewMatches: () => {
+    try {
+      const socket = getSocket();
+      socket.off('newMatch');
+    } catch (error) {
+      if(isAxiosError(error)) {
+        toast.error(error.response?.data.message || 'something went wrong');
+      } else {
+        toast.error('something went wrong');
+      }
+    }
+  }
 })
 );
 

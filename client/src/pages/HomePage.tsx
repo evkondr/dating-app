@@ -8,15 +8,24 @@ import NoMoreProfiles from '../components/NoMoreProfiles';
 import Loader from '../components/Loader';
 import SwipeArea from '../components/SwipeArea';
 import SwipeFeedback from '../components/SwipeFeedback';
+import useAuthStore from '../store/useAuth';
 
 const HomePage = () => {
-  const { getProfiles, profiles, loadingProfiles } = useMatchStore();
+  const { getProfiles, profiles, loadingProfiles, subscribeToNewMatches, unsubscribeFromNewMatches } = useMatchStore();
+  const { authUser } = useAuthStore();
   useEffect(() => {
     getProfiles();
   }, [getProfiles]);
-  console.log('profiles ', profiles);
+
+  useEffect(() => {
+    authUser && subscribeToNewMatches();
+    return () => {
+      unsubscribeFromNewMatches();
+    };
+  }, [authUser, subscribeToNewMatches, unsubscribeFromNewMatches]);
+
   if(loadingProfiles) {
-    return (<div>Loading...</div>);
+    return (<Loader />);
   }
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-gradient-to-br from-pink-100 to-purple-100

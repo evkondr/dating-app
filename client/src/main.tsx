@@ -3,10 +3,11 @@ import { createRoot } from 'react-dom/client';
 import './index.css';
 import { RouterProvider} from 'react-router-dom';
 import router from './components/routes/router';
-import Loader from './components/Loader';
+import { Toaster } from 'react-hot-toast';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={router} fallbackElement={<Loader />} />
+    <RouterProvider router={router} />
+    <Toaster />
   </StrictMode>,
 );
