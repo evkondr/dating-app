@@ -42,7 +42,7 @@ const Sidebar = () => {
                   <Link key={match.id} to={`/chat/${match.id}`}>
                     <div className='flex items-center mb-4 cursor-pointer hover:bg-pink-50 p-2 rounded-lg transition-colors duration-300'>
                       <img
-                        src={match.image || '/avatar.png'}
+                        src={match.image || '/avatar-thumbnail.png'}
                         alt='User avatar'
                         className='size-12 object-cover rounded-full mr-3 border-2 border-pink-300'
                       />

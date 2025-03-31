@@ -62,7 +62,7 @@ export default class MatchController {
       }
       await userService.saveUser(user);
       const result = await userService.saveUser(currentUser);
-      return res.status(200).json(standardResponse(true, 'User swiped to right', result));
+      return res.status(201).json(standardResponse(true, 'User swiped to right', {}));
     } catch (error) {
       next(error);
     }
