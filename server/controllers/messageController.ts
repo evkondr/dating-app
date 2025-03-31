@@ -5,6 +5,7 @@ import userService from "../services/userService";
 import ErrorApi from "../utils/errorApi";
 import { standardResponse } from "../utils/constants";
 import { Equal, Or } from "typeorm";
+import { getIO, getOnlineUsers } from "../socket/socket.server";
 
 export default class MessageController {
   static async sendMessage(req:Request, res:Response, next:NextFunction) {
@@ -22,7 +23,14 @@ export default class MessageController {
         sender: req.user,
         receiver,
         content
-      })
+      });
+      const io = getIO();
+      const receiverSocketId = getOnlineUsers().get(receiverId);
+      if(receiverSocketId) {
+        io.to(receiverSocketId).emit('newMessage', {
+          message: result
+        })
+      }
       res.status(201).json(standardResponse(true, 'Message created', result));
     } catch (error) {
       next(error);
