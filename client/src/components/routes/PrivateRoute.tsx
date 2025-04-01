@@ -11,7 +11,7 @@ const PrivateRoute = ({children}: {children: React.ReactNode}) => {
     checkAuth();
   }, [checkAuth]);
   if(checkingAuth) {
-    return <Loader />;
+    return null;
   }
   if(!authUser) {
     return <Navigate to='/auth' replace />;

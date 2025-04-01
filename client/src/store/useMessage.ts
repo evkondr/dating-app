@@ -5,11 +5,12 @@ import toast from 'react-hot-toast';
 import axiosInstance from '../components/lib/axios';
 import { getSocket } from '../socket/socket.client';
 import { IMessage } from '../models/message';
+import useAuthStore from './useAuth';
 
 interface IMessageStore {
   messages: IMessage[]
   loading: boolean
-  sendMessage: () => void
+  sendMessage: (receiverId: string, content: string) => void
   getConversation: (userId:string) => Promise<void>
   subscribeToMessages: () => void
   unsubscribeFromMessages: () => void
@@ -17,20 +18,26 @@ interface IMessageStore {
 const useMessageStore = create<IMessageStore>((set) => ({
   messages: [],
   loading: false,
-  async sendMessage() {
+  async sendMessage(receiverId: string, content: string) {
     try {
-      set({ loading: true });
-      const response = await axiosInstance.post('/messages/string');
-
+      
+      const { data: { payload } } = await axiosInstance.post<{ payload: IMessage }>('/messages/string');
+      set((state) => ({
+        messages: [...state.messages, {
+          id: payload.id,
+          sender: useAuthStore.getState().authUser?.id as string,
+          receiver: receiverId,
+          content: payload.content,
+          createdAt: payload.createdAt
+        }]
+      }));
     } catch (error) {
       if(isAxiosError(error)) {
         toast.error(error.response?.data.message || 'something went wrong');
       } else {
         toast.error('something went wrong');
       }
-    } finally {
-      set({ loading: false});
-    }
+    } 
   },
   async getConversation(userId:string) {
     try {
@@ -42,6 +49,8 @@ const useMessageStore = create<IMessageStore>((set) => ({
       } else {
         toast.error('something went wrong');
       }
+    } finally {
+      set({ loading: false});
     }
   },
   subscribeToMessages: () => {

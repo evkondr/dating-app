@@ -31,7 +31,14 @@ export default class MessageController {
           message: result
         })
       }
-      res.status(201).json(standardResponse(true, 'Message created', result));
+      const messageDto = {
+        id: result.id,
+        sender: result.sender.id,
+        receiver: result.receiver.id,
+        content: result.content,
+        createdAt: result.createdAt
+      }
+      res.status(201).json(standardResponse(true, 'Message created', messageDto));
     } catch (error) {
       next(error);
     }

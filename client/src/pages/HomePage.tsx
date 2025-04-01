@@ -24,9 +24,6 @@ const HomePage = () => {
     };
   }, [authUser, subscribeToNewMatches, unsubscribeFromNewMatches]);
 
-  if(loadingProfiles) {
-    return (<Loader />);
-  }
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-gradient-to-br from-pink-100 to-purple-100
 		 overflow-hidden">
