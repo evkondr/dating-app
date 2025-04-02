@@ -1,9 +1,7 @@
-import { User } from './user';
-
 export interface IMessage {
   id: string
-  sender: User
-  receiver: User
+  sender: string
+  receiver: string
   content: string
   createdAt: Date;
 } 

@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { User } from '../models/user';
 import { AxiosResponse, isAxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import axiosInstance from '../components/lib/axios';
@@ -21,7 +20,10 @@ const useMessageStore = create<IMessageStore>((set) => ({
   async sendMessage(receiverId: string, content: string) {
     try {
       
-      const { data: { payload } } = await axiosInstance.post<{ payload: IMessage }>('/messages/string');
+      const { data: { payload } } = await axiosInstance.post<{ payload: IMessage }>('/messages/string', {
+        receiverId,
+        content
+      });
       set((state) => ({
         messages: [...state.messages, {
           id: payload.id,
