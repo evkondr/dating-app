@@ -10,7 +10,7 @@ import MatchNotFound from '../components/MatchNotFound';
 
 const ChatPage = () => {
   const {getMatches, matches, loadingMatches} = useMatchStore();
-  const { messages } = useMessageStore();
+  const { messages, getConversation, subscribeToMessages, unsubscribeFromMessages } = useMessageStore();
   const { authUser } = useAuthStore();
   const { id } = useParams();
   const match = matches.find((m) => m?.id === id);
@@ -18,8 +18,14 @@ const ChatPage = () => {
   useEffect(() => {
     if(authUser && id){
       getMatches();
+      getConversation(id);
+      subscribeToMessages();
     }
-  }, [authUser, getMatches, id]);
+    return () => {
+      unsubscribeFromMessages();
+    };
+  }, [authUser, getConversation, getMatches, id, subscribeToMessages, unsubscribeFromMessages]);
+
   if (loadingMatches) return (<LoadingMessagesUI />);
   if (!match) return (<MatchNotFound />);
   return (
@@ -52,7 +58,7 @@ const ChatPage = () => {
             ))
           )}
         </div>
-        <MessageInput />
+        <MessageInput match={match}/>
       </div>
     </div>
   );
