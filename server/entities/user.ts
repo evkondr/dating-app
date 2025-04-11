@@ -94,12 +94,12 @@ export default class User {
     })
     matches:User[]
     
-    @OneToMany(() => Message, (message) => message.sender, {
+    @OneToMany(() => Message, (message) => message.sender.id, {
       onDelete: 'CASCADE'
     })
     sentMessages: Message[]
 
-    @OneToMany(() => Message, (message) => message.receiver, {
+    @OneToMany(() => Message, (message) => message.receiver.id, {
      onDelete: 'CASCADE'
     }
     )

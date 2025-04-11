@@ -4,4 +4,4 @@ export interface IMessage {
   receiver: string
   content: string
   createdAt: Date;
-} 
+}

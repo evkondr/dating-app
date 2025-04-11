@@ -19,8 +19,7 @@ const useMessageStore = create<IMessageStore>((set) => ({
   loading: false,
   async sendMessage(receiverId: string, content: string) {
     try {
-      
-      const { data: { payload } } = await axiosInstance.post<{ payload: IMessage }>('/messages/string', {
+      const { data: { payload } } = await axiosInstance.post<{ payload: IMessage }>('/messages/send', {
         receiverId,
         content
       });

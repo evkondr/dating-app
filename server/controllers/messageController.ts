@@ -50,17 +50,34 @@ export default class MessageController {
       if(!receiver) {
         throw ErrorApi.NotFound('User not found')
       };
-      // TODO: refactor
       const result = await messageService.findManyMessages({
         where: {
           sender: Or(Equal(receiver.id), Equal(req.user.id)),
           receiver: Or(Equal(receiver.id), Equal(req.user.id))
         },
+        relations: {
+          sender: {
+          },
+          receiver: true
+        },
+        select: {
+          sender: {
+            id: true
+          },
+          receiver: {
+            id: true
+          }
+        },
         order: {
           createdAt: 'ASC'
         }
       });
-      res.status(201).json(standardResponse(true, 'Successfully', result));
+      const messages = result.map((message) => ({
+        ...message,
+        sender: message.sender.id,
+        receiver: message.receiver.id,
+      }))
+      res.status(201).json(standardResponse(true, 'Successfully', messages));
     } catch (error) {
       next(error);
     }
