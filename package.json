@@ -5,6 +5,8 @@
   "main": "server/index.ts",
   "scripts": {
     "dev": "nodemon --ignore client/*",
+    "build": "npm install && npm install --prefix client && npm run build --prefix client",
+    "start": "node /server/index.ts",
     "seed": "ts-node server/seeds/seed.ts"
   },
   "author": "",

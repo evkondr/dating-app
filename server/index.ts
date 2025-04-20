@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
 import cors from 'cors';
@@ -38,6 +38,13 @@ app.use('/api/matches', matchRoute);
 app.use('/api/messages', messageRoute);
 //error middleware
 app.use(errorMiddleware);
+if(process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../client/build')));
+  // return index html for none exist route
+  app.use('*', (req:Request, res:Response) => {
+    res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'))
+  })
+}
 httpServer.listen(5000, () => {
   console.log(`Server is running on port ${port}`);
   AppDataSource.initialize().then(() => {
