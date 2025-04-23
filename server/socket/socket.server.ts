@@ -19,10 +19,8 @@ export const initSocket = (httpServer: HttpServer) => {
   });
 
   io.on('connection', (socket:Socket) => {
-    console.log(socket.data.userId)
     onlineUsers.set(socket.data.userId, socket.id);
     socket.on('disconnected', () => {
-      console.log('user disconnected')
       onlineUsers.delete(socket.data.userId);
     });
   });

@@ -39,12 +39,13 @@ app.use('/api/messages', messageRoute);
 //error middleware
 app.use(errorMiddleware);
 if(process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../client/build')));
+  app.use(express.static(path.join(__dirname, '../client/dist')));
   // return index html for none exist route
   app.use('*', (req:Request, res:Response) => {
-    res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'))
+    res.sendFile(path.resolve(__dirname, '../client/dist', 'index.html'))
   })
 }
+console.log(process.env.NODE_ENV)
 httpServer.listen(5000, () => {
   console.log(`Server is running on port ${port}`);
   AppDataSource.initialize().then(() => {
